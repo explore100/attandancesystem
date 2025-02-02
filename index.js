@@ -1,5 +1,6 @@
 // Function to handle form submission
 function submitValue() {
+    let studentId = null;
     const firstName = document.getElementById('first-input').value;
     const lastName = document.getElementById('last-input').value;
     const dob = document.getElementById('date-input').value;
@@ -10,6 +11,14 @@ function submitValue() {
     const address = document.getElementById('address-input').value;
     const className = document.getElementById('class-input').value;
     const rollNo = document.getElementById('roll-input').value;
+    const studentIdHtml =  document.getElementById('student-id').value;
+    console.log( document.getElementById('student-id'))
+    if(studentIdHtml) {
+     studentId = studentIdHtml
+    }else{
+     studentId = crypto.randomUUID();
+
+    }
 
     // Validate inputs
     if (!firstName || !lastName || !dob || !gender || !fatherName || !motherName || !contact || !address || !className || !rollNo) {
@@ -21,36 +30,30 @@ function submitValue() {
     let students = JSON.parse(localStorage.getItem('students')) || [];
 
     // Check if we're editing an existing student
-    const studentIndex = students.findIndex(student => student.rollNo === rollNo);
+    const studentIndex = students.findIndex(student => student.studentId === studentId);
+
+    const studentObj  = {
+        firstName,
+        lastName,
+        dob,
+        gender,
+        fatherName,
+        motherName,
+        contact,
+        address,
+        className,
+        rollNo,
+        studentId // Roll number stays the same, it shouldn't be changed here.
+    }
+
+    console.log('studetobject', studentObj)
 
     if (studentIndex !== -1) {
-        // Update existing student
-        students[studentIndex] = {
-            firstName,
-            lastName,
-            dob,
-            gender,
-            fatherName,
-            motherName,
-            contact,
-            address,
-            className,
-            rollNo
-        };
+        // Update existing student (keeping the rollNo the same)
+        students[studentIndex] = studentObj
     } else {
         // Add new student if not found
-        students.push({
-            firstName,
-            lastName,
-            dob,
-            gender,
-            fatherName,
-            motherName,
-            contact,
-            address,
-            className,
-            rollNo
-        });
+        students.push(studentObj);
     }
 
     // Save updated data back to localStorage
@@ -70,6 +73,8 @@ function displayTable() {
     const tableSection = document.getElementById('table-section');
     const table = document.getElementById('data-table');
 
+    console.log('students',students)
+
     // Clear any existing rows
     table.innerHTML = "";
 
@@ -87,12 +92,14 @@ function displayTable() {
             <td class="border border-gray-400 px-4 py-2">${student.className}</td>
             <td class="border border-gray-400 px-4 py-2">${student.rollNo}</td>
             <td class="border border-gray-400 px-4 py-2 flex">
-                <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg" onclick="fetchStudentData(${student.rollNo})">edit</button>
+                <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg" onclick="fetchStudentData('${student.studentId}')">edit</button>
+ <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewDetails('${student.studentId}')">View Details</button>
+  <button class="bg-red-500 text-white px-3 py-1 ml-2 rounded hover:bg-slate-600" onclick="deleteData('${student.studentId}')">Delete</button>
             </td>
         `;
         table.appendChild(row);
     });
-
+// Function to handle "View Details" action
     // Show or hide table section based on data
     if (students.length > 0) {
         tableSection.classList.remove('hidden');
@@ -104,17 +111,14 @@ function displayTable() {
 // Initial call to populate table on page load
 window.onload = displayTable;
 
-
 // Function to fetch student data by roll number and populate the form for editing
-function fetchStudentData(rollNo) {
+function fetchStudentData(studentId, mode = 'create') {
     const students = JSON.parse(localStorage.getItem('students')) || [];
-    
-     // Ensure rollNo is treated as a string to match data stored in localStorage
-    rollNo = rollNo.toString();
 
     // Find the student by roll number
-    const student = students.find(student => student.rollNo.toString() === rollNo);
-    
+    const student = students.find(student => student.studentId === studentId);
+
+
     // If the student is found, pre-fill the form with their data
     if (student) {
         document.getElementById('first-input').value = student.firstName;
@@ -127,9 +131,41 @@ function fetchStudentData(rollNo) {
         document.getElementById('contact-input').value = student.contact;
         document.getElementById('address-input').value = student.address;
         document.getElementById('class-input').value = student.className;
-        document.getElementById('roll-input').value = student.rollNo;
+        document.getElementById('roll-input').value = student.rollNo; 
+        document.getElementById('student-id').value = student.studentId; // Preserve the student ID for updating in case of editing
     }
 }
+function viewDetails(studentId) {
+    const students = JSON.parse(localStorage.getItem('students')) || [];
+    const selectedStudent = students.find(student => student.studentId === studentId);
+
+    if (selectedStudent) {
+        // Save the selected student's data to sessionStorage
+        sessionStorage.setItem('selectedStudent', JSON.stringify(selectedStudent));
+        // Navigate to the view page
+        window.location.href = 'view.html';
+    } else {
+        alert('Student details not found.');
+    }
+}
+// Delete data
+const deleteData = (studentId) => {
+    // Retrieve students data from localStorage
+    const students = JSON.parse(localStorage.getItem('students')) || [];
+    
+    // Filter out the student with the given studentId
+    const filteredStudents = students.filter((student) => student.studentId !== studentId);
+    
+    // Save updated students array back to localStorage
+    localStorage.setItem('students', JSON.stringify(filteredStudents));
+    
+    // Update the UI to reflect changes
+    displayTable();
+};
+
+  
+  
+
 
 
 // Function to search data
@@ -168,6 +204,13 @@ function searchData() {
                 <td class="border border-gray-400 px-4 py-2">${student.address}</td>
                 <td class="border border-gray-400 px-4 py-2">${student.className}</td>
                 <td class="border border-gray-400 px-4 py-2">${student.rollNo}</td>
+                <td class="border border-gray-400 px-4 py-2 flex">
+                <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg">edit</button>
+                <button class="border-2 border-black px-6  ml-2 rounded-lg ">view Detail</button>
+                <button class="border-2 border-black px-6  ml-2 rounded-lg ">Delet</button>
+
+            </td>
+
             `;
             table.appendChild(row);
         });

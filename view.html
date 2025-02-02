@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-6 text-center">Student Details</h1>
+        <div id="studentDetails" class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md"></div>
+            <!-- Details will be populated here -->
+        </div>
+        <div class="mt-6 text-center">
+            <button onclick="window.history.back()" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                Back to List
+            </button>
+            <button id="show-marksheet-btn" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600">
+                Show Marksheet
+            </button>
+            <section id="table-section" class="max-w-5xl mx-auto mt-8 hidden">
+                <table class="table-auto w-full border-collapse border border-gray-400">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-400 px-4 py-2">Subject</th>
+                            <th class="border border-gray-400 px-4 py-2">Physics</th>
+                            <th class="border border-gray-400 px-4 py-2">Math</th>
+                            <th class="border border-gray-400 px-4 py-2">Chemistry</th>
+                            <th class="border border-gray-400 px-4 py-2">English</th>
+                            <th class="border border-gray-400 px-4 py-2">Biology</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+                        <!-- Data rows will be appended here dynamically -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</body>
+<script src="./view.js" defer></script>
+
+</html>
