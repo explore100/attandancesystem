@@ -93,8 +93,8 @@ function displayTable() {
             <td class="border border-gray-400 px-4 py-2">${student.rollNo}</td>
             <td class="border border-gray-400 px-4 py-2 flex">
                 <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg" onclick="fetchStudentData('${student.studentId}')">edit</button>
- <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewDetails('${student.studentId}')">View Details</button>
-  <button class="bg-red-500 text-white px-3 py-1 ml-2 rounded hover:bg-slate-600" onclick="deleteData('${student.studentId}')">Delete</button>
+                <button class="border-2 border-black px-6  ml-2 bg-blue-500  hover:bg-blue-600 rounded-lg" onclick="viewDetails('${student.studentId}')">view Detail</button>
+                <button class="border-2 border-black px-6  ml-2 bg-red-500 hover:bg-slate-600 rounded-lg" onclick="deleteData('${student.studentId}')">Delete</button>
             </td>
         `;
         table.appendChild(row);
@@ -205,9 +205,9 @@ function searchData() {
                 <td class="border border-gray-400 px-4 py-2">${student.className}</td>
                 <td class="border border-gray-400 px-4 py-2">${student.rollNo}</td>
                 <td class="border border-gray-400 px-4 py-2 flex">
-                <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg">edit</button>
-                <button class="border-2 border-black px-6  ml-2 rounded-lg ">view Detail</button>
-                <button class="border-2 border-black px-6  ml-2 rounded-lg ">Delet</button>
+                <button class="border-2 border-black px-2 py-2 mr-2 rounded-lg" onclick="fetchStudentData('${student.studentId}')">edit</button>
+                <button class="border-2 border-black px-6  ml-2 bg-blue-500  hover:bg-blue-600 rounded-lg" onclick="viewDetails('${student.studentId}')">view Detail</button>
+                <button class="border-2 border-black px-6  ml-2 bg-red-500 hover:bg-slate-600 rounded-lg" onclick="deleteData('${student.studentId}')">Delete</button>
 
             </td>
 
